@@ -9,8 +9,6 @@
 
 #define STBI_NO_HDR
 
-namespace fs = std::filesystem;
-
 
 int main() {
 
@@ -23,7 +21,7 @@ int main() {
     std::ofstream file("image.txt");
 
 
-    std::vector<char> set {'@','#','8', '&','o',':','*','.',' ',' ', ' '};
+    std::vector<char> set {'@','#','8', '&','o',':','*','.',' '};
 
     char *pixelsSet = nullptr;
 
@@ -36,19 +34,20 @@ int main() {
 
     for(int scanlines = 0; scanlines < y; scanlines+=scanlineInc) {
         int arrCount = 0;
+        static int ma = 0;
         pixelsSet = new char [x];
         for (int pixels = 0; pixels < x; pixels++) {
             int r,g,b;
             r = *(data + (scanlines * x + pixels) * unsigned(n) + 0);
             g = *(data + (scanlines * x + pixels) * unsigned(n) + 1);
             b = *(data + (scanlines * x + pixels) * unsigned(n) + 2);
-            int maxN = std::max(r/28, g/28);
-            maxN = std::max(maxN, b/28);
+            int maxN = std::max(r/31, g/31);
+            maxN = std::max(maxN, b/31);
             pixelsSet[arrCount] = set.at(maxN);
             arrCount++;
         }
-        file.write (pixelsSet, x);
-        file.write("\r\n", 4);
+        file.write (pixelsSet, x-1);
+        file.write("\r\n",4);
     }
 
     delete [] pixelsSet;
